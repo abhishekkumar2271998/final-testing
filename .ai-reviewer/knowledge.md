@@ -1,19 +1,20 @@
 # final-testing reviewer notes
 
 ## Architecture
-This codebase is an Electron application encapsulating a Python backend designed for recording, transcribing, and summarizing confidential conversations. The directory structure features `src/` for backend logic in Python, managing tasks like audio recording and integration with machine learning models, while `app/` contains the Electron framework with React for the frontend, indicating a clear separation between the UI and backend functionality.
+The `final-testing` codebase consists of a Python backend combined with an Electron-based frontend built using React and Vite. The backend handles audio recording, transcription, and summary generation, while the frontend provides a user interface for managing recordings and settings. The structure is organized into separate directories for the Electron app (`app/`) and the Python backend (`src/`), facilitating clear separation of concerns.
 
 ## Conventions
-- **File Structure**: The main project folders are `app/` for the Electron app and `src/` for the Python backend. Files like `simple_recorder.py` serve as entry points for command-line interactions, while specific features are modularized (e.g., `audio_recorder.py`, `transcriber.py`, `summarizer.py`).
-- **Naming Conventions**: Python files follow snake_case (e.g., `simple_recorder.py`), while JavaScript files adhere to camelCase (e.g., `main.js`).
-- **Linting and Formatting**: The team uses `ruff` for Python linting, ensuring adherence to PEP 8 guidelines, and `eslint` with Prettier for JavaScript, emphasizing the use of semicolons and avoiding `var`. Example: `app/package.json` setup includes scripts for linting with `"lint:renderer": "eslint renderer/src --ext .ts,.tsx"`.
-- **Type Annotations**: Python files utilize type hints for clarity on data types, contributing to better readability and maintainability (e.g., functions in `src/transcriber.py`).
-- **React Component Structure**: Components are organized into separate files and directories for logical groupings, ensuring clear separations of concerns, evident in `app/renderer/src/App.tsx` with route handling and UI composition.
+- **Code Style**: Python files follow PEP 8 guidelines and employ type hints and docstrings, as suggested in `CONTRIBUTING.md`. JavaScript files in the Electron app utilize semicolons and use `const`/`let` instead of `var`, aligning with the styles in `README.md`.
+- **Component and File Structure**: The app consists of specific route files in `app/renderer/src/routes/` for different functionalities (e.g., `Recording`, `Settings`, `Chat`). Each component is encapsulated, allowing for separation and independent maintenance.
+- **CLI Interface**: The `simple_recorder.py` file is used for command line interactions, exemplifying a clear entry point for user commands as laid out in the `README.md`.
+- **Testing**: The inclusion of end-to-end (e2e) tests is facilitated by Playwright, with test scripts defined in the `app/package.json`, ensuring automated testing is part of the workflow.
 
 ## Intentional non-standard choices
-- **Manual Semantic Versioning**: Instead of automation in versioning, the project employs manual semantic versioning through dedicated CLI commands in `app/package.json`. Contributors should be mindful to follow the established process for version increments.
+- **Use of Custom Scripts**: The use of custom scripts in `app/package.json` for building and running the Electron app is an intentional choice for managing different app states such as production builds, development iterations, and automated releases. This may not conform to typical Node.js scripts but is tailored for Electron's unique backend.
+- **Environment Variable Handling**: The approach for loading environment variables directly from a `.env` file without using external libraries in `app/main.js` is a deliberate decision to reduce dependencies and streamline dependency management.
 
 ## Watch out for
-- **Ensure Environment Compatibility**: As development is strictly on macOS, code should be thoroughly tested within that environment, paying special attention to features that utilize system dependencies. The `CONTRIBUTING.md` indicates necessary dependencies such as `Ollama` and `ffmpeg` that must be installed for successful execution.
-- **Testing Procedures**: Be aware of the requirement to run specific commands for testing the CLI and Electron app functionality before submitting pull requests (`python simple_recorder.py --help` and `cd app && npm start`).
-- **Handling Asynchronous Logic in React**: The code may contain potential issues related to state management and component updates in React when handling asynchronous side effects. Review hooks and effect dependencies closely to prevent unexpected behavior. An example is the use of `useEffect` in `App.tsx` that manages the application's routing based on the current recording state.
+- **Python Dependency Management**: Ensure that all dependencies listed in `requirements.txt` are installed and the environment is properly set up for local development, as missing packages will break functionality.
+- **TypeScript Strictness**: The TypeScript settings in `app/renderer/tsconfig.json` enforce strict checks. Be cautious of unused parameters and type misalignments, as the TS compiler will fail builds if these issues are present.
+- **Electron Security Best Practices**: The `app/preload.js` file should be examined carefully for vulnerabilities related to IPC communication. Ensure strict whitelisting and validation of incoming and outgoing messages to prevent remote code execution or data leaks.
+- **Styling Consistency**: With Tailwind CSS configured in `app/renderer/tailwind.config.cjs`, adhere to the defined classes and avoid inline styles to maintain styling consistency across the application.
