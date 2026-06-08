@@ -1,5 +1,18 @@
 import * as React from 'react';
-import { PencilLine, RefreshCw, Search, Square, X } from 'lucide-react';
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  FolderOpen,
+  Mic,
+  PencilLine,
+  RefreshCw,
+  Search,
+  Sparkles,
+  Square,
+  X,
+} from 'lucide-react';
 import { MeetingsShell } from '@/components/MeetingsShell';
 import { UpcomingCard } from '@/components/home/UpcomingCard';
 import { PreviousRow } from '@/components/home/PreviousRow';
@@ -152,6 +165,10 @@ export function Home({ mode }: HomeProps) {
             </div>
           )}
 
+          {mode === 'home' && <TipsCarousel />}
+
+          {mode === 'home' && <Gallery />}
+
           {upcoming.length > 0 && mode === 'home' && (
             <section className="mb-10">
               <SectionHead
@@ -253,6 +270,216 @@ export function Home({ mode }: HomeProps) {
         </>
       )}
     </MeetingsShell>
+  );
+}
+
+interface Slide {
+  title: string;
+  body: string;
+}
+
+const TIPS: Slide[] = [
+  {
+    title: 'Capture from anywhere',
+    body: `Start a note instantly with ${shortcut('⌘⇧R', 'Ctrl+Shift+R')} — no need to bring StenoAI to the front first.`,
+  },
+  {
+    title: 'Private by design',
+    body: 'Transcription and summaries run locally on your Mac. Your audio never leaves the device.',
+  },
+  {
+    title: 'Stay organized',
+    body: 'Sort notes into folders and find any past meeting in seconds with search.',
+  },
+  {
+    title: 'Ask your notes',
+    body: 'Query a transcript in plain language to surface decisions, action items, and follow-ups.',
+  },
+];
+
+const CAROUSEL_INTERVAL_MS = 6000;
+
+// Self-contained auto-advancing carousel of product tips for the home view.
+// Pauses while hovered/focused; dots and arrows allow manual navigation.
+function TipsCarousel() {
+  const [index, setIndex] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  const count = TIPS.length;
+
+  const go = React.useCallback(
+    (next: number) => setIndex((next + count) % count),
+    [count],
+  );
+
+  React.useEffect(() => {
+    if (paused) return;
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % count),
+      CAROUSEL_INTERVAL_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [paused, count]);
+
+  const slide = TIPS[index];
+
+  return (
+    <section
+      className="mb-10"
+      aria-roledescription="carousel"
+      aria-label="Tips"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
+      <div
+        className="relative flex min-h-[120px] items-center gap-4 rounded-xl px-5 py-5"
+        style={{
+          background: 'var(--surface-raised)',
+          border: '1px solid var(--border-subtle)',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => go(index - 1)}
+          aria-label="Previous tip"
+          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
+          style={{ color: 'var(--fg-2)' }}
+        >
+          <ChevronLeft className="size-4" />
+        </button>
+
+        <div
+          className="flex-1"
+          aria-live="polite"
+          aria-roledescription="slide"
+          aria-label={`${index + 1} of ${count}`}
+        >
+          <h3
+            className="mb-1.5 text-sm font-medium tracking-[-0.005em]"
+            style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+          >
+            {slide.title}
+          </h3>
+          <p
+            className="max-w-[60ch] text-[13px] leading-[1.55]"
+            style={{ color: 'var(--fg-2)' }}
+          >
+            {slide.body}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => go(index + 1)}
+          aria-label="Next tip"
+          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
+          style={{ color: 'var(--fg-2)' }}
+        >
+          <ChevronRight className="size-4" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-center justify-center gap-1.5">
+        {TIPS.map((tip, i) => (
+          <button
+            key={tip.title}
+            type="button"
+            onClick={() => go(i)}
+            aria-label={`Go to tip ${i + 1}`}
+            aria-current={i === index}
+            className="size-1.5 rounded-full transition-all"
+            style={{
+              background: i === index ? 'var(--accent-primary)' : 'var(--border)',
+              width: i === index ? 16 : 6,
+            }}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface GalleryItem {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+}
+
+const GALLERY: GalleryItem[] = [
+  {
+    icon: Mic,
+    title: 'Record',
+    body: 'Capture mic and system audio in one tap.',
+  },
+  {
+    icon: FileText,
+    title: 'Transcribe',
+    body: 'Accurate, on-device transcripts via Whisper.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Summarize',
+    body: 'Clean summaries and action items, locally.',
+  },
+  {
+    icon: FolderOpen,
+    title: 'Organize',
+    body: 'Group notes into folders you control.',
+  },
+  {
+    icon: Calendar,
+    title: 'Connect calendar',
+    body: 'Pull in upcoming meetings automatically.',
+  },
+  {
+    icon: Search,
+    title: 'Search & ask',
+    body: 'Find anything or query notes in plain language.',
+  },
+];
+
+// Self-contained gallery section for the home view: a responsive grid of
+// capability tiles. Inline here per request — no separate component file.
+function Gallery() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Gallery" count={GALLERY.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {GALLERY.map(({ icon: Icon, title, body }) => (
+          <div
+            key={title}
+            className="flex flex-col gap-2 rounded-xl px-4 py-4 transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <span
+              className="inline-flex size-8 items-center justify-center rounded-lg"
+              style={{
+                background: 'rgba(27,27,25,0.05)',
+                color: 'var(--fg-1)',
+              }}
+            >
+              <Icon className="size-4" />
+            </span>
+            <h3
+              className="text-sm font-medium tracking-[-0.005em]"
+              style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+            >
+              {title}
+            </h3>
+            <p
+              className="text-[12.5px] leading-[1.5]"
+              style={{ color: 'var(--fg-2)' }}
+            >
+              {body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
