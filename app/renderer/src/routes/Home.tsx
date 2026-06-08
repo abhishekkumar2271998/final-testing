@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, PencilLine, RefreshCw, Search, Square, X } from 'lucide-react';
+import { PencilLine, RefreshCw, Search, Square, X } from 'lucide-react';
 import { MeetingsShell } from '@/components/MeetingsShell';
 import { UpcomingCard } from '@/components/home/UpcomingCard';
 import { PreviousRow } from '@/components/home/PreviousRow';
@@ -152,8 +152,6 @@ export function Home({ mode }: HomeProps) {
             </div>
           )}
 
-          {mode === 'home' && <TipsCarousel />}
-
           {upcoming.length > 0 && mode === 'home' && (
             <section className="mb-10">
               <SectionHead
@@ -255,133 +253,6 @@ export function Home({ mode }: HomeProps) {
         </>
       )}
     </MeetingsShell>
-  );
-}
-
-interface Slide {
-  title: string;
-  body: string;
-}
-
-const TIPS: Slide[] = [
-  {
-    title: 'Capture from anywhere',
-    body: `Start a note instantly with ${shortcut('⌘⇧R', 'Ctrl+Shift+R')} — no need to bring StenoAI to the front first.`,
-  },
-  {
-    title: 'Private by design',
-    body: 'Transcription and summaries run locally on your Mac. Your audio never leaves the device.',
-  },
-  {
-    title: 'Stay organized',
-    body: 'Sort notes into folders and find any past meeting in seconds with search.',
-  },
-  {
-    title: 'Ask your notes',
-    body: 'Query a transcript in plain language to surface decisions, action items, and follow-ups.',
-  },
-];
-
-const CAROUSEL_INTERVAL_MS = 6000;
-
-// Self-contained auto-advancing carousel of product tips for the home view.
-// Pauses while hovered/focused; dots and arrows allow manual navigation.
-function TipsCarousel() {
-  const [index, setIndex] = React.useState(0);
-  const [paused, setPaused] = React.useState(false);
-  const count = TIPS.length;
-
-  const go = React.useCallback(
-    (next: number) => setIndex((next + count) % count),
-    [count],
-  );
-
-  React.useEffect(() => {
-    if (paused) return;
-    const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % count),
-      CAROUSEL_INTERVAL_MS,
-    );
-    return () => window.clearInterval(id);
-  }, [paused, count]);
-
-  const slide = TIPS[index];
-
-  return (
-    <section
-      className="mb-10"
-      aria-roledescription="carousel"
-      aria-label="Tips"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
-      <div
-        className="relative flex min-h-[120px] items-center gap-4 rounded-xl px-5 py-5"
-        style={{
-          background: 'var(--surface-raised)',
-          border: '1px solid var(--border-subtle)',
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => go(index - 1)}
-          aria-label="Previous tip"
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
-          style={{ color: 'var(--fg-2)' }}
-        >
-          <ChevronLeft className="size-4" />
-        </button>
-
-        <div
-          className="flex-1"
-          aria-live="polite"
-          aria-roledescription="slide"
-          aria-label={`${index + 1} of ${count}`}
-        >
-          <h3
-            className="mb-1.5 text-sm font-medium tracking-[-0.005em]"
-            style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
-          >
-            {slide.title}
-          </h3>
-          <p
-            className="max-w-[60ch] text-[13px] leading-[1.55]"
-            style={{ color: 'var(--fg-2)' }}
-          >
-            {slide.body}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => go(index + 1)}
-          aria-label="Next tip"
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
-          style={{ color: 'var(--fg-2)' }}
-        >
-          <ChevronRight className="size-4" />
-        </button>
-      </div>
-
-      <div className="mt-3 flex items-center justify-center gap-1.5">
-        {TIPS.map((tip, i) => (
-          <button
-            key={tip.title}
-            type="button"
-            onClick={() => go(i)}
-            aria-label={`Go to tip ${i + 1}`}
-            aria-current={i === index}
-            className="size-1.5 rounded-full transition-all"
-            style={{
-              background: i === index ? 'var(--accent-primary)' : 'var(--border)',
-              width: i === index ? 16 : 6,
-            }}
-          />
-        ))}
-      </div>
-    </section>
   );
 }
 
