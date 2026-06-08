@@ -5,6 +5,8 @@ import {
   ChevronRight,
   FileText,
   FolderOpen,
+  Github,
+  Mail,
   Mic,
   PencilLine,
   RefreshCw,
@@ -168,6 +170,8 @@ export function Home({ mode }: HomeProps) {
           {mode === 'home' && <TipsCarousel />}
 
           {mode === 'home' && <Gallery />}
+
+          {mode === 'home' && <ContactSection />}
 
           {upcoming.length > 0 && mode === 'home' && (
             <section className="mb-10">
@@ -477,6 +481,74 @@ function Gallery() {
               {body}
             </p>
           </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface ContactLink {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  href: string;
+}
+
+const CONTACTS: ContactLink[] = [
+  {
+    icon: Mail,
+    label: 'Email',
+    value: 'support@stenoai.app',
+    href: 'mailto:support@stenoai.app',
+  },
+  {
+    icon: Github,
+    label: 'GitHub',
+    value: 'Report an issue',
+    href: 'https://github.com/stenoai/stenoai/issues',
+  },
+];
+
+// Self-contained contact section for the home view. Links open externally via
+// the OS handler. Inline here per request — no separate component file.
+function ContactSection() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Contact" count={CONTACTS.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {CONTACTS.map(({ icon: Icon, label, value, href }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-3 rounded-xl px-4 py-3.5 transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <span
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: 'rgba(27,27,25,0.05)', color: 'var(--fg-1)' }}
+            >
+              <Icon className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <div
+                className="text-[11.5px] font-medium tracking-[0.02em]"
+                style={{ color: 'var(--fg-muted)' }}
+              >
+                {label}
+              </div>
+              <div
+                className="truncate text-sm"
+                style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+              >
+                {value}
+              </div>
+            </div>
+          </a>
         ))}
       </div>
     </section>
