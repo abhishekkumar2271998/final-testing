@@ -1,5 +1,18 @@
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, PencilLine, RefreshCw, Search, Square, X } from 'lucide-react';
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  FolderOpen,
+  Mic,
+  PencilLine,
+  RefreshCw,
+  Search,
+  Sparkles,
+  Square,
+  X,
+} from 'lucide-react';
 import { MeetingsShell } from '@/components/MeetingsShell';
 import { UpcomingCard } from '@/components/home/UpcomingCard';
 import { PreviousRow } from '@/components/home/PreviousRow';
@@ -153,6 +166,8 @@ export function Home({ mode }: HomeProps) {
           )}
 
           {mode === 'home' && <TipsCarousel />}
+
+          {mode === 'home' && <Gallery />}
 
           {upcoming.length > 0 && mode === 'home' && (
             <section className="mb-10">
@@ -379,6 +394,89 @@ function TipsCarousel() {
               width: i === index ? 16 : 6,
             }}
           />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface GalleryItem {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+}
+
+const GALLERY: GalleryItem[] = [
+  {
+    icon: Mic,
+    title: 'Record',
+    body: 'Capture mic and system audio in one tap.',
+  },
+  {
+    icon: FileText,
+    title: 'Transcribe',
+    body: 'Accurate, on-device transcripts via Whisper.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Summarize',
+    body: 'Clean summaries and action items, locally.',
+  },
+  {
+    icon: FolderOpen,
+    title: 'Organize',
+    body: 'Group notes into folders you control.',
+  },
+  {
+    icon: Calendar,
+    title: 'Connect calendar',
+    body: 'Pull in upcoming meetings automatically.',
+  },
+  {
+    icon: Search,
+    title: 'Search & ask',
+    body: 'Find anything or query notes in plain language.',
+  },
+];
+
+// Self-contained gallery section for the home view: a responsive grid of
+// capability tiles. Inline here per request — no separate component file.
+function Gallery() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Gallery" count={GALLERY.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {GALLERY.map(({ icon: Icon, title, body }) => (
+          <div
+            key={title}
+            className="flex flex-col gap-2 rounded-xl px-4 py-4 transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <span
+              className="inline-flex size-8 items-center justify-center rounded-lg"
+              style={{
+                background: 'rgba(27,27,25,0.05)',
+                color: 'var(--fg-1)',
+              }}
+            >
+              <Icon className="size-4" />
+            </span>
+            <h3
+              className="text-sm font-medium tracking-[-0.005em]"
+              style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+            >
+              {title}
+            </h3>
+            <p
+              className="text-[12.5px] leading-[1.5]"
+              style={{ color: 'var(--fg-2)' }}
+            >
+              {body}
+            </p>
+          </div>
         ))}
       </div>
     </section>
