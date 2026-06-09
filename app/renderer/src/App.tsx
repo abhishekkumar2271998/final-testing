@@ -11,6 +11,12 @@ import { FolderDetail } from '@/routes/FolderDetail';
 import { OrgShared, OrgSharedDetail } from '@/routes/OrgShared';
 import { Recording } from '@/routes/Recording';
 import { Processing, ProcessingDock } from '@/routes/Processing';
+import { SignIn } from '@/routes/account/SignIn';
+import { SignUp } from '@/routes/account/SignUp';
+import { Profile } from '@/routes/account/Profile';
+import { SellerDashboard } from '@/routes/account/SellerDashboard';
+import { BuyerDashboard } from '@/routes/account/BuyerDashboard';
+import { AuthProvider } from '@/hooks/useAuth';
 import { AskBar, TranscriptBar } from '@/components/AskBar';
 import { BottomDockSlot } from '@/components/BottomDockSlot';
 import { LiveDock } from '@/components/LiveDock';
@@ -99,6 +105,16 @@ export function App() {
     return () => document.removeEventListener('keydown', onKey, true);
   }, []);
 
+  // Marketplace account routes render their own full-screen chrome and need
+  // the AuthProvider; they bypass the recording/AskBar dock layout entirely.
+  if (isAccountRoute(route)) {
+    return (
+      <AuthProvider>
+        <AccountRouteView route={route} />
+      </AuthProvider>
+    );
+  }
+
   const isRecordingRoute = route === '/recording';
   const isProcessingRoute = route === '/meetings/processing';
   // The /chat page has its own large composer, so the floating AskBar dock
@@ -129,6 +145,20 @@ export function App() {
       </AskBarProvider>
     </StreamingProvider>
   );
+}
+
+const ACCOUNT_ROUTES = ['/signin', '/signup', '/profile', '/seller', '/buyer'];
+
+function isAccountRoute(route: string): boolean {
+  return ACCOUNT_ROUTES.includes(route);
+}
+
+function AccountRouteView({ route }: { route: string }) {
+  if (route === '/signup') return <SignUp />;
+  if (route === '/profile') return <Profile />;
+  if (route === '/seller') return <SellerDashboard />;
+  if (route === '/buyer') return <BuyerDashboard />;
+  return <SignIn />;
 }
 
 function RouteView({ route }: { route: string }) {

@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
   Calendar,
-  ChevronLeft,
-  ChevronRight,
+  ExternalLink,
   FileText,
   FolderOpen,
-  Github,
   Mail,
   Mic,
   PencilLine,
@@ -328,8 +326,6 @@ function TipsCarousel() {
     return () => window.clearInterval(id);
   }, [paused, count]);
 
-  const slide = TIPS[index];
-
   return (
     <section
       className="mb-10"
@@ -605,7 +601,7 @@ const CONTACTS: ContactLink[] = [
     href: 'mailto:support@stenoai.app',
   },
   {
-    icon: Github,
+    icon: ExternalLink,
     label: 'GitHub',
     value: 'Report an issue',
     href: 'https://github.com/stenoai/stenoai/issues',
@@ -726,4 +722,20 @@ function groupPrevious(meetings: Meeting[]): Group[] {
     groups[label].push(m);
   }
   return order.map((label) => ({ label, items: groups[label] }));
+}
+
+function groupLabel(d: Date, now: Date): string {
+  const sameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+  if (sameDay(d, now)) return 'Today';
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (sameDay(d, yesterday)) return 'Yesterday';
+  const age = now.getTime() - d.getTime();
+  if (age < 7 * 24 * 60 * 60 * 1000) {
+    return d.toLocaleDateString(undefined, { weekday: 'long' });
+  }
+  return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
 }
