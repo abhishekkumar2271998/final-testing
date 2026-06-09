@@ -240,6 +240,54 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Derive up-to-two-letter initials from a display name for the avatar. */
+function nameInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+/** Profile summary card shown at the top of the General settings tab: an
+ *  initials avatar, the user's name, and their calendar connection status. */
+function ProfileCard({
+  name,
+  subtitle,
+}: {
+  name: string;
+  subtitle: string;
+}) {
+  const trimmed = name.trim();
+  return (
+    <div
+      className="mb-2 flex items-center gap-4 rounded-xl px-4 py-4"
+      style={{
+        background: 'var(--surface-raised)',
+        border: '1px solid var(--border-subtle)',
+      }}
+    >
+      <div
+        className="inline-flex size-12 shrink-0 items-center justify-center rounded-full text-[16px] font-medium"
+        style={{ background: 'var(--surface-sunken)', color: 'var(--fg-1)' }}
+        aria-hidden="true"
+      >
+        {trimmed ? nameInitials(trimmed) : '?'}
+      </div>
+      <div className="min-w-0">
+        <div
+          className="truncate text-[15px] font-medium"
+          style={{ color: 'var(--fg-1)' }}
+        >
+          {trimmed || 'Set your name'}
+        </div>
+        <div className="truncate text-[13px]" style={{ color: 'var(--fg-2)' }}>
+          {subtitle}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Google's official multicolour 'G' glyph. Inlined so we don't carry a
  *  Google-branded asset file; the SVG paths are public branding material.
  *  Sized to sit cleanly next to a button label at our default font size. */
@@ -614,6 +662,15 @@ function GeneralTab() {
 
   return (
     <section data-settings-tab="general">
+      <ProfileCard
+        name={nameDraft || userName.data || ''}
+        subtitle={
+          calendarConnected
+            ? `Calendar connected · ${calendarProvider}`
+            : 'Local profile'
+        }
+      />
+
       <SettingRow
         label="Your name"
         description="First name only — used for in-app greetings. Stored locally."
