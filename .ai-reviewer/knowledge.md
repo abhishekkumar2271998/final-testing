@@ -1,21 +1,22 @@
 # final-testing reviewer notes
 
 ## Architecture
-This repository implements "Steno," an AI-powered tool designed for recording, transcribing, and summarizing meetings, with a primary focus on privacy as all operations are performed locally on macOS. The project is structured into a Python backend within the `src/` directory for audio processing and summarization, and an Electron-based frontend located in the `app/` directory, which uses React and Vite for the user interface.
+The `final-testing` repository is primarily organized into a Python backend and an Electron frontend. The backend, located in the `src/` directory, handles audio recording and processing, while the Electron app in the `app/` directory provides a user interface built with React and Vite. This structure supports modular development for the Python and JavaScript components, allowing for separate yet cohesive evolution of the respective parts.
 
 ## Conventions
-- **File Naming and Structure**: The repo follows a clear directory structure with distinct folders for the Electron app (`app/`) and the Python backend (`src/`). Key files include `simple_recorder.py` for the CLI interface and `main.js` for the Electron main process.
-- **JavaScript and TypeScript**: The frontend leverages React with TypeScript. The team uses `eslint` for linting and follows a style that enforces the use of semicolons, and `const/let` instead of `var`, as stated in the `CONTRIBUTING.md` file.
-- **Python Code Style**: Python files are expected to adhere to PEP 8 guidelines, include type hints, and contain docstrings, helping maintain clarity and consistency across the codebase.
-- **Tailwind CSS**: The app's UI uses Tailwind CSS for styling, configured in `app/renderer/tailwind.config.cjs`. The theme is extended with custom colors, font families, and animations.
-- **Environment Variables**: The backend uses a `.env` strategy for configuration, ensuring sensitive data is managed securely.
+- The Python code adheres to PEP 8 guidelines and requires type hints and docstrings for all functions and classes, which is indicated in `CONTRIBUTING.md`.
+- JavaScript files must use semicolons and prefer `const` and `let` over `var`; this can be seen in files like `app/main.js` and `app/package.json`.
+- The repository uses Tailwind CSS for styling, as specified in `app/renderer/tailwind.config.cjs`, which extends default themes and supports responsive design.
+- Standard task commands for development (like linting and building) are defined in `app/package.json` scripts, e.g., `npm run build` for packaging the Electron app.
+- Versioning follows a manual semantic versioning scheme, as outlined in `CONTRIBUTING.md`.
 
 ## Intentional non-standard choices
-- **Single Responsibility in IPC**: The use of the IPC (Inter-Process Communication) bridge between Electron and React is implemented with a clear contract setup in `preload.js`, ensuring separation of concerns and preventing the renderer from direct access to Electron internals. This pattern, while potentially complex, is designed to enhance security and modularity.
-- **Manual Semantic Versioning**: Instead of using automated tools for versioning, the team engages in manual semantic versioning, which is defined in the `CONTRIBUTING.md` as the responsibility of maintainers. This could lead to inconsistency if not are adhered to strictly.
+- The Electron app uses a custom URL protocol (`stenoai://`) to handle shortcuts for recording sessions. This requires specific handling in the main process (`app/main.js`), which includes functions to parse and execute shortcuts, preventing the standard usage of URL handling by the browser context.
+- The backend executable path varies based on whether the application is running in development or production, which is managed in `app/main.js`. This flexibility differentiates deployment needs without reliance on environmental variables.
 
 ## Watch out for
-- **Error Handling**: Be vigilant regarding areas in the code where error handling is minimal or absent, particularly around file operations, network requests, and environment loading.
-- **Performance Measurement**: Ensure that performance-impacting operations in `electron-updater` and `audio-loopback` have proper metrics and checks, as issues in these areas could severely affect user experience.
-- **Security in IPC communications**: Always audit the IPC channels (`send`, `invoke`) to ensure that the data transmitted does not expose sensitive user data, especially when connecting with external services like Google Calendar.
-- **Testing Coverage**: Review the coverage of tests, particularly for edge cases in the audio processing logic, especially in files like `src/audio_recorder.py` and `src/transcriber.py`, given the potential variability with different audio inputs.
+- Ensure all functions and methods include appropriate error handling, especially around external service calls (e.g., API interactions) found in `app/main.js` and Python files.
+- Avoid manipulating global state within functions unnecessarily, especially in event handlers in `app/main.js`; this can lead to race conditions.
+- Watch out for excessive reliance on implicit variable types in JavaScript, as TypeScript's strictness in `app/renderer/tsconfig.json` is intended to avoid runtime issues.
+- Consistency in naming conventions across different languages could lead to confusion; for example, ensure that API endpoints used in the Python backend (`server/README.md`) remain consistent with frontend expectations.
+- Regularly maintain the documentation in `CONTRIBUTING.md` and other markdown files to reflect any new standards or conventions adopted in development.
