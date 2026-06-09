@@ -1,20 +1,22 @@
-# final-testing reviewer notes
+# StenoAI reviewer notes
 
 ## Architecture
-The `final-testing` codebase consists of a Python backend combined with an Electron-based frontend built using React and Vite. The backend handles audio recording, transcription, and summary generation, while the frontend provides a user interface for managing recordings and settings. The structure is organized into separate directories for the Electron app (`app/`) and the Python backend (`src/`), facilitating clear separation of concerns.
+This codebase is for StenoAI, an AI-powered application designed for recording, transcribing, and summarizing meetings. It is structured into a Python backend residing in the `src/` directory for audio processing and a React frontend in the `app/` directory, utilizing Electron to package the application for macOS. The project also includes a CLI interface with `simple_recorder.py` for standalone functionality.
 
 ## Conventions
-- **Code Style**: Python files follow PEP 8 guidelines and employ type hints and docstrings, as suggested in `CONTRIBUTING.md`. JavaScript files in the Electron app utilize semicolons and use `const`/`let` instead of `var`, aligning with the styles in `README.md`.
-- **Component and File Structure**: The app consists of specific route files in `app/renderer/src/routes/` for different functionalities (e.g., `Recording`, `Settings`, `Chat`). Each component is encapsulated, allowing for separation and independent maintenance.
-- **CLI Interface**: The `simple_recorder.py` file is used for command line interactions, exemplifying a clear entry point for user commands as laid out in the `README.md`.
-- **Testing**: The inclusion of end-to-end (e2e) tests is facilitated by Playwright, with test scripts defined in the `app/package.json`, ensuring automated testing is part of the workflow.
+- **Directory Structure**: The repository contains a clear separation of concerns. The `src/` directory holds the Python modules such as `audio_recorder.py` and `transcriber.py`, while the `app/` directory contains the Electron application, including the main process (`main.js`), renderer code, and assets.
+- **Python Code Style**: Adhere to PEP 8 guidelines as specified in `CONTRIBUTING.md`. Use type hints and ensure functions have docstrings.
+- **JavaScript/TypeScript Style**: Use `const` and `let` instead of `var`. Emphasize the use of semicolons, as indicated in `CONTRIBUTING.md`.
+- **Testing**: Ensure all PRs confirm the functionality of the CLI and Electron app. This includes running `python simple_recorder.py --help` and `npm start` for the app.
+- **Tailwind CSS Configuration**: Use Tailwind's classes defined in `tailwind.config.cjs` for styling in the renderer, ensuring adherence to the established theme and responsive design guidelines.
 
 ## Intentional non-standard choices
-- **Use of Custom Scripts**: The use of custom scripts in `app/package.json` for building and running the Electron app is an intentional choice for managing different app states such as production builds, development iterations, and automated releases. This may not conform to typical Node.js scripts but is tailored for Electron's unique backend.
-- **Environment Variable Handling**: The approach for loading environment variables directly from a `.env` file without using external libraries in `app/main.js` is a deliberate decision to reduce dependencies and streamline dependency management.
+- The project utilizes local processing for AI tasks, which may appear inefficient in comparison to cloud-based solutions. However, this design prioritizes user privacy and meets the confidentiality requirements of its target audience in legal and governmental sectors.
 
 ## Watch out for
-- **Python Dependency Management**: Ensure that all dependencies listed in `requirements.txt` are installed and the environment is properly set up for local development, as missing packages will break functionality.
-- **TypeScript Strictness**: The TypeScript settings in `app/renderer/tsconfig.json` enforce strict checks. Be cautious of unused parameters and type misalignments, as the TS compiler will fail builds if these issues are present.
-- **Electron Security Best Practices**: The `app/preload.js` file should be examined carefully for vulnerabilities related to IPC communication. Ensure strict whitelisting and validation of incoming and outgoing messages to prevent remote code execution or data leaks.
-- **Styling Consistency**: With Tailwind CSS configured in `app/renderer/tailwind.config.cjs`, adhere to the defined classes and avoid inline styles to maintain styling consistency across the application.
+- **Hardcoded Paths and Credentials**: Ensure that sensitive information or local paths are managed correctly, adhering to security practices by utilizing a `.env` file for configuration.
+- **Inefficient State Management**: In the React components, ensure that performance is optimized, e.g., by using `useMemo` and `useCallback` as necessary, which appears to be a concern in `App.tsx` with multiple hooks managing component states.
+- **Error Handling**: The main process could benefit from more robust error handling, specifically in network calls and external interactions, to improve user experience and application reliability.
+- **Potential Global State Dependencies**: Examine the use of global services like `ipc` and `PostHog` in `App.tsx` and ensure they do not create hidden dependencies that affect component rendering.
+
+This reviewer playbook ensures a consistent understanding of the conventions and architecture of the StenoAI codebase, aiding efficient code reviews while maintaining the overall quality and integrity of the project.
