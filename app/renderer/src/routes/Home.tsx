@@ -171,6 +171,8 @@ export function Home({ mode }: HomeProps) {
 
           {mode === 'home' && <Gallery />}
 
+          {mode === 'home' && <ImageGallery />}
+
           {mode === 'home' && <ContactSection />}
 
           {upcoming.length > 0 && mode === 'home' && (
@@ -480,6 +482,58 @@ function Gallery() {
             >
               {body}
             </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+}
+
+// Inline SVG data-URI placeholder so the gallery renders real <img> tiles
+// without any network request (keeps the local-first / CSP behavior). Replace
+// these with real image imports (e.g. `import shot from '@/assets/shot.png'`)
+// when artwork is available.
+function placeholderImage(label: string, tone: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240" viewBox="0 0 320 240">
+    <rect width="320" height="240" fill="${tone}"/>
+    <text x="160" y="128" font-family="Georgia, serif" font-size="20" fill="#FAF9F5" text-anchor="middle">${label}</text>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+const IMAGES: GalleryImage[] = [
+  { src: placeholderImage('Record', '#1B1B19'), alt: 'Recording a meeting' },
+  { src: placeholderImage('Transcript', '#2A2A26'), alt: 'A generated transcript' },
+  { src: placeholderImage('Summary', '#3A3A33'), alt: 'An AI summary' },
+  { src: placeholderImage('Folders', '#24241F'), alt: 'Notes organized in folders' },
+  { src: placeholderImage('Search', '#1B1B19'), alt: 'Searching past notes' },
+  { src: placeholderImage('Calendar', '#2A2A26'), alt: 'Upcoming calendar events' },
+];
+
+// Self-contained image gallery for the home view: a responsive grid of image
+// tiles. Inline here per request — no separate component file.
+function ImageGallery() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Images" count={IMAGES.length} />
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {IMAGES.map((img) => (
+          <div
+            key={img.alt}
+            className="overflow-hidden rounded-xl"
+            style={{ border: '1px solid var(--border-subtle)' }}
+          >
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover transition-transform duration-200 hover:scale-[1.03]"
+            />
           </div>
         ))}
       </div>
