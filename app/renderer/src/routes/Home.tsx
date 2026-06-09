@@ -303,61 +303,6 @@ const TIPS: Slide[] = [
   },
 ];
 
-const CAROUSEL_INTERVAL_MS = 6000;
-
-// Self-contained auto-advancing carousel of product tips for the home view.
-// Pauses while hovered/focused; dots and arrows allow manual navigation.
-function TipsCarousel() {
-  const [index, setIndex] = React.useState(0);
-  const [paused, setPaused] = React.useState(false);
-  const count = TIPS.length;
-
-  const go = React.useCallback(
-    (next: number) => setIndex((next + count) % count),
-    [count],
-  );
-
-  React.useEffect(() => {
-    if (paused) return;
-    const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % count),
-      CAROUSEL_INTERVAL_MS,
-    );
-    return () => window.clearInterval(id);
-  }, [paused, count]);
-
-  const slide = TIPS[index];
-
-  return (
-    <section
-      className="mb-10"
-      aria-roledescription="carousel"
-      aria-label="Tips"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
-
-      <div className="mt-3 flex items-center justify-center gap-1.5">
-        {TIPS.map((tip, i) => (
-          <button
-            key={tip.title}
-            type="button"
-            onClick={() => go(i)}
-            aria-label={`Go to tip ${i + 1}`}
-            aria-current={i === index}
-            className="size-1.5 rounded-full transition-all"
-            style={{
-              background: i === index ? 'var(--accent-primary)' : 'var(--border)',
-              width: i === index ? 16 : 6,
-            }}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
 
 interface GalleryItem {
   icon: React.ComponentType<{ className?: string }>;
