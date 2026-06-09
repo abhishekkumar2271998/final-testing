@@ -173,6 +173,8 @@ export function Home({ mode }: HomeProps) {
 
           {mode === 'home' && <ImageGallery />}
 
+          {mode === 'home' && <ProductGrid />}
+
           {mode === 'home' && <ContactSection />}
 
           {upcoming.length > 0 && mode === 'home' && (
@@ -487,6 +489,100 @@ function ImageGallery() {
               loading="lazy"
               className="aspect-[4/3] w-full object-cover transition-transform duration-200 hover:scale-[1.03]"
             />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface Product {
+  icon: React.ComponentType<{ className?: string }>;
+  name: string;
+  description: string;
+  price: string;
+  badge?: string;
+}
+
+const PRODUCTS: Product[] = [
+  {
+    icon: Mic,
+    name: 'StenoAI Free',
+    description: 'Local recording, transcription, and summaries on your Mac.',
+    price: 'Free',
+  },
+  {
+    icon: Sparkles,
+    name: 'StenoAI Pro',
+    description: 'Cloud models, longer context, and priority summarization.',
+    price: '$9/mo',
+    badge: 'Popular',
+  },
+  {
+    icon: Calendar,
+    name: 'Team',
+    description: 'Shared folders, calendar sync, and centralized billing.',
+    price: '$19/mo',
+  },
+];
+
+// Self-contained product grid of cards for the home view. Inline here per
+// request — no separate component file.
+function ProductGrid() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Plans" count={PRODUCTS.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {PRODUCTS.map(({ icon: Icon, name, description, price, badge }) => (
+          <div
+            key={name}
+            className="flex flex-col gap-3 rounded-xl px-4 py-4 transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <span
+                className="inline-flex size-8 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(27,27,25,0.05)', color: 'var(--fg-1)' }}
+              >
+                <Icon className="size-4" />
+              </span>
+              {badge && (
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10.5px] font-medium tracking-[0.02em]"
+                  style={{ background: 'var(--accent-primary)', color: 'var(--surface-raised)' }}
+                >
+                  {badge}
+                </span>
+              )}
+            </div>
+            <div className="flex-1">
+              <h3
+                className="mb-1 text-sm font-medium tracking-[-0.005em]"
+                style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+              >
+                {name}
+              </h3>
+              <p
+                className="text-[12.5px] leading-[1.5]"
+                style={{ color: 'var(--fg-2)' }}
+              >
+                {description}
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <span
+                className="text-[15px] font-medium tabular-nums"
+                style={{ color: 'var(--fg-1)' }}
+              >
+                {price}
+              </span>
+              <Button variant="outline" className="h-7 px-3 text-xs">
+                Choose
+              </Button>
+            </div>
           </div>
         ))}
       </div>
