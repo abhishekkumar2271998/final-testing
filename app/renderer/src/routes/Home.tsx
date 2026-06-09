@@ -338,53 +338,6 @@ function TipsCarousel() {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div
-        className="relative flex min-h-[120px] items-center gap-4 rounded-xl px-5 py-5"
-        style={{
-          background: 'var(--surface-raised)',
-          border: '1px solid var(--border-subtle)',
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => go(index - 1)}
-          aria-label="Previous tip"
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
-          style={{ color: 'var(--fg-2)' }}
-        >
-          <ChevronLeft className="size-4" />
-        </button>
-
-        <div
-          className="flex-1"
-          aria-live="polite"
-          aria-roledescription="slide"
-          aria-label={`${index + 1} of ${count}`}
-        >
-          <h3
-            className="mb-1.5 text-sm font-medium tracking-[-0.005em]"
-            style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
-          >
-            {slide.title}
-          </h3>
-          <p
-            className="max-w-[60ch] text-[13px] leading-[1.55]"
-            style={{ color: 'var(--fg-2)' }}
-          >
-            {slide.body}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => go(index + 1)}
-          aria-label="Next tip"
-          className="inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
-          style={{ color: 'var(--fg-2)' }}
-        >
-          <ChevronRight className="size-4" />
-        </button>
-      </div>
 
       <div className="mt-3 flex items-center justify-center gap-1.5">
         {TIPS.map((tip, i) => (
