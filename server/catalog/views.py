@@ -52,6 +52,16 @@ class SellerProductDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Product.objects.filter(seller=self.request.user)
 
 
+class SellerOrderListView(generics.ListAPIView):
+    """GET /api/seller/orders/ — orders placed on this seller's products."""
+
+    serializer_class = OrderSerializer
+    permission_classes = [IsSeller]
+
+    def get_queryset(self):
+        return Order.objects.filter(product__seller=self.request.user)
+
+
 class SellerDashboardView(APIView):
     """GET /api/seller/dashboard/ — headline stats for the seller."""
 

@@ -7,6 +7,7 @@ import { DashboardShell } from '@/components/account/DashboardShell';
 import { api, apiErrorMessage } from '@/lib/api';
 import {
   formatPrice,
+  type Order,
   type Product,
   type SellerStats,
 } from '@/lib/marketplace';
@@ -33,6 +34,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 export function SellerDashboard() {
   const [stats, setStats] = React.useState<SellerStats | null>(null);
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [orders, setOrders] = React.useState<Order[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
   const [draft, setDraft] = React.useState({
@@ -44,12 +46,14 @@ export function SellerDashboard() {
 
   const load = React.useCallback(async () => {
     try {
-      const [s, p] = await Promise.all([
+      const [s, p, o] = await Promise.all([
         api.get<SellerStats>('/seller/dashboard/'),
         api.get<Product[]>('/seller/products/'),
+        api.get<Order[]>('/seller/orders/'),
       ]);
       setStats(s.data);
       setProducts(p.data);
+      setOrders(o.data);
     } catch (err) {
       setError(apiErrorMessage(err));
     }
@@ -209,6 +213,45 @@ export function SellerDashboard() {
           </form>
         </section>
       </div>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-[14px] font-medium" style={{ color: 'var(--fg-1)' }}>
+          Incoming orders
+        </h2>
+        {orders.length === 0 ? (
+          <p className="text-[13px]" style={{ color: 'var(--fg-2)' }}>
+            No orders on your products yet.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {orders.map((o) => (
+              <div
+                key={o.id}
+                className="flex items-center justify-between gap-4 rounded-lg px-4 py-3"
+                style={{
+                  background: 'var(--surface-raised)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-[14px] font-medium" style={{ color: 'var(--fg-1)' }}>
+                    {o.product_name}
+                  </div>
+                  <div className="text-[12.5px]" style={{ color: 'var(--fg-2)' }}>
+                    {o.buyer_name} · Qty {o.quantity} · {formatPrice(o.total)}
+                  </div>
+                </div>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[11px] font-medium capitalize"
+                  style={{ background: 'var(--surface-sunken)', color: 'var(--fg-1)' }}
+                >
+                  {o.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </DashboardShell>
   );
 }

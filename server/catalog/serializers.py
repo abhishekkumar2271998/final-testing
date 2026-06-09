@@ -26,6 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source="product.name", read_only=True)
+    buyer_name = serializers.CharField(source="buyer.username", read_only=True)
     total = serializers.DecimalField(
         max_digits=12, decimal_places=2, read_only=True
     )
@@ -35,6 +36,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "buyer",
+            "buyer_name",
             "product",
             "product_name",
             "quantity",
@@ -46,6 +48,7 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "id",
             "buyer",
+            "buyer_name",
             "product_name",
             "unit_price",
             "total",
