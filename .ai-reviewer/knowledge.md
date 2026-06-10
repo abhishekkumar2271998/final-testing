@@ -1,22 +1,23 @@
-# final-testing reviewer notes
+# stenoai reviewer notes
 
 ## Architecture
-The `final-testing` repository is primarily organized into a Python backend and an Electron frontend. The backend, located in the `src/` directory, handles audio recording and processing, while the Electron app in the `app/` directory provides a user interface built with React and Vite. This structure supports modular development for the Python and JavaScript components, allowing for separate yet cohesive evolution of the respective parts.
+The StenoAI repository consists of a hybrid application combining a Python backend for audio processing and a React frontend (built using Electron and Vite) for the desktop application. The structure separates the application into distinct components: the `src` directory for Python scripts that handle audio recording, transcription, and summarization, and the `app` directory housing the Electron app with its renderer and main process code.
 
 ## Conventions
-- The Python code adheres to PEP 8 guidelines and requires type hints and docstrings for all functions and classes, which is indicated in `CONTRIBUTING.md`.
-- JavaScript files must use semicolons and prefer `const` and `let` over `var`; this can be seen in files like `app/main.js` and `app/package.json`.
-- The repository uses Tailwind CSS for styling, as specified in `app/renderer/tailwind.config.cjs`, which extends default themes and supports responsive design.
-- Standard task commands for development (like linting and building) are defined in `app/package.json` scripts, e.g., `npm run build` for packaging the Electron app.
-- Versioning follows a manual semantic versioning scheme, as outlined in `CONTRIBUTING.md`.
+- **File Structure**: The main project structure includes `app/` for the Electron application and `src/` for the Python backend. Key files include `simple_recorder.py` for CLI interface and `audio_recorder.py`, `transcriber.py`, and `summarizer.py` under `src/` for core functionality.
+- **JavaScript Patterns**: Within the JavaScript code, consistent usage of `const` and `let` instead of `var` is expected. File paths in the `vite.config.ts` illustrate a clear alias strategy for better import management.
+- **Coding Standards**: 
+  - Python code should conform to PEP 8 guidelines, utilize type hints, and include docstrings. The use of `ruff` as a linter is enforced.
+  - In JavaScript and TypeScript, semicolons are mandatory, and existing patterns should be followed.
+- **Environment Management**: The usage of a `.env` configuration to load environment variables is a common convention, noted in the `main.js` file.
 
 ## Intentional non-standard choices
-- The Electron app uses a custom URL protocol (`stenoai://`) to handle shortcuts for recording sessions. This requires specific handling in the main process (`app/main.js`), which includes functions to parse and execute shortcuts, preventing the standard usage of URL handling by the browser context.
-- The backend executable path varies based on whether the application is running in development or production, which is managed in `app/main.js`. This flexibility differentiates deployment needs without reliance on environmental variables.
+- The project utilizes a custom script in `mic-monitor/Makefile` to compile a Swift application for microphone monitoring, which is platform-specific but serves a unique purpose for audio capture. This choice may raise warnings in other tools; however, it provides necessary functionality for the application.
+- The Electron application uses various dependencies without following a strict version pinning mechanism outside of the `requirements.txt`, which may look inconsistent but allows for flexibility in dependency management.
 
 ## Watch out for
-- Ensure all functions and methods include appropriate error handling, especially around external service calls (e.g., API interactions) found in `app/main.js` and Python files.
-- Avoid manipulating global state within functions unnecessarily, especially in event handlers in `app/main.js`; this can lead to race conditions.
-- Watch out for excessive reliance on implicit variable types in JavaScript, as TypeScript's strictness in `app/renderer/tsconfig.json` is intended to avoid runtime issues.
-- Consistency in naming conventions across different languages could lead to confusion; for example, ensure that API endpoints used in the Python backend (`server/README.md`) remain consistent with frontend expectations.
-- Regularly maintain the documentation in `CONTRIBUTING.md` and other markdown files to reflect any new standards or conventions adopted in development.
+- **Type Safety**: Ensure all TypeScript code adheres to strict typing to prevent runtime errors, as implied by settings like `"strict": true` in `tsconfig.json`.
+- **React Development Standards**: Inspect for proper usage of hooks and patterns to prevent stale closures and unnecessary re-renders. Also, keep an eye on dependency arrays in hooks for potential issues.
+- **Python Dependency Management**: Be cautious of version conflicts in `requirements.txt`, particularly with major dependencies like Django or libraries critical to audio processing.
+- **Environment Risks**: The reliance on local environment variables to store sensitive information (like API keys) can pose security risks if not managed properly. Ensure sensitive files are `.gitignored`.
+- **Cross-Platform Compatibility**: The assumption of running exclusively on macOS (as noted in `README.md`) may limit testing or contributions from Windows or Linux users; clarify this in guidelines to avoid community confusion.
