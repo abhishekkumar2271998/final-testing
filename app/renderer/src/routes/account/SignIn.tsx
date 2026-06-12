@@ -18,8 +18,8 @@ export function SignIn() {
     setError(null);
     setBusy(true);
     try {
-      const user = await signIn(username.trim(), password);
-      navigate(user.role === 'seller' ? '/seller' : '/buyer');
+      await signIn(username.trim(), password);
+      navigate('/dashboard');
     } catch (err) {
       setError(apiErrorMessage(err));
     } finally {

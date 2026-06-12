@@ -13,6 +13,7 @@ import { Recording } from '@/routes/Recording';
 import { Processing, ProcessingDock } from '@/routes/Processing';
 import { SignIn } from '@/routes/account/SignIn';
 import { SignUp } from '@/routes/account/SignUp';
+import { Dashboard } from '@/routes/account/Dashboard';
 import { Profile } from '@/routes/account/Profile';
 import { SellerDashboard } from '@/routes/account/SellerDashboard';
 import { BuyerDashboard } from '@/routes/account/BuyerDashboard';
@@ -147,7 +148,14 @@ export function App() {
   );
 }
 
-const ACCOUNT_ROUTES = ['/signin', '/signup', '/profile', '/seller', '/buyer'];
+const ACCOUNT_ROUTES = [
+  '/signin',
+  '/signup',
+  '/dashboard',
+  '/profile',
+  '/seller',
+  '/buyer',
+];
 
 function isAccountRoute(route: string): boolean {
   return ACCOUNT_ROUTES.includes(route);
@@ -155,6 +163,7 @@ function isAccountRoute(route: string): boolean {
 
 function AccountRouteView({ route }: { route: string }) {
   if (route === '/signup') return <SignUp />;
+  if (route === '/dashboard') return <Dashboard />;
   if (route === '/profile') return <Profile />;
   if (route === '/seller') return <SellerDashboard />;
   if (route === '/buyer') return <BuyerDashboard />;
