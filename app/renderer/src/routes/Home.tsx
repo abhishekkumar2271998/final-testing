@@ -171,6 +171,8 @@ export function Home({ mode }: HomeProps) {
 
           {mode === 'home' && <ImageGallery />}
 
+          {mode === 'home' && <CardGallery />}
+
           {mode === 'home' && <ProductGrid />}
 
           {mode === 'home' && <ContactSection />}
@@ -485,6 +487,78 @@ function ImageGallery() {
               loading="lazy"
               className="aspect-[4/3] w-full object-cover transition-transform duration-200 hover:scale-[1.03]"
             />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface GalleryCard {
+  src: string;
+  title: string;
+  caption: string;
+}
+
+const GALLERY_CARDS: GalleryCard[] = [
+  {
+    src: placeholderImage('Record', '#1B1B19'),
+    title: 'Capture',
+    caption: 'Record meetings with mic and system audio.',
+  },
+  {
+    src: placeholderImage('Transcribe', '#2A2A26'),
+    title: 'Transcribe',
+    caption: 'Accurate, on-device transcripts.',
+  },
+  {
+    src: placeholderImage('Summarize', '#3A3A33'),
+    title: 'Summarize',
+    caption: 'Clean summaries and action items.',
+  },
+  {
+    src: placeholderImage('Organize', '#24241F'),
+    title: 'Organize',
+    caption: 'Group notes into folders you control.',
+  },
+];
+
+// Self-contained card gallery for the home view: each image sits inside a card
+// with a title and caption. Inline here per request — no separate file.
+function CardGallery() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Gallery" count={GALLERY_CARDS.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {GALLERY_CARDS.map((card) => (
+          <div
+            key={card.title}
+            className="overflow-hidden rounded-xl transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <img
+              src={card.src}
+              alt={card.title}
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover"
+            />
+            <div className="px-3.5 py-3">
+              <h3
+                className="text-sm font-medium tracking-[-0.005em]"
+                style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+              >
+                {card.title}
+              </h3>
+              <p
+                className="mt-0.5 text-[12.5px] leading-[1.5]"
+                style={{ color: 'var(--fg-2)' }}
+              >
+                {card.caption}
+              </p>
+            </div>
           </div>
         ))}
       </div>
