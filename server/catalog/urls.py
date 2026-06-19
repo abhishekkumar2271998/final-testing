@@ -6,6 +6,7 @@ from .views import (
     ProductBrowseView,
     ProductDetailView,
     SellerDashboardView,
+    SellerOrderListView,
     SellerProductDetailView,
     SellerProductListCreateView,
 )
@@ -17,6 +18,7 @@ urlpatterns = [
     # Seller
     path("seller/products/", SellerProductListCreateView.as_view(), name="seller-products"),
     path("seller/products/<int:pk>/", SellerProductDetailView.as_view(), name="seller-product-detail"),
+    path("seller/orders/", SellerOrderListView.as_view(), name="seller-orders"),
     path("seller/dashboard/", SellerDashboardView.as_view(), name="seller-dashboard"),
     # Buyer
     path("buyer/orders/", BuyerOrderListCreateView.as_view(), name="buyer-orders"),

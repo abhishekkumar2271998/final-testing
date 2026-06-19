@@ -20,13 +20,13 @@ export function SignUp() {
     setError(null);
     setBusy(true);
     try {
-      const user = await signUp({
+      await signUp({
         username: username.trim(),
         email: email.trim(),
         password,
         role,
       });
-      navigate(user.role === 'seller' ? '/seller' : '/buyer');
+      navigate('/dashboard');
     } catch (err) {
       setError(apiErrorMessage(err));
     } finally {

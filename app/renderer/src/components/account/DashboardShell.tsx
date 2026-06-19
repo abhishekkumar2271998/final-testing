@@ -37,6 +37,7 @@ export function DashboardShell({
   if (!user) return null;
 
   const nav: NavItem[] = [
+    { label: 'Overview', path: '/dashboard' },
     { label: 'Profile', path: '/profile' },
     user.role === 'seller'
       ? { label: 'Seller', path: '/seller' }
@@ -55,7 +56,7 @@ export function DashboardShell({
         <div className="flex items-center gap-5">
           <button
             type="button"
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/dashboard')}
             className="flex items-center gap-2"
             style={{ color: 'var(--fg-1)' }}
           >

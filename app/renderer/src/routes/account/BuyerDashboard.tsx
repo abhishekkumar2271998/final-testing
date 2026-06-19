@@ -86,6 +86,39 @@ export function BuyerDashboard() {
 
       <FormError message={error} />
 
+      {stats && stats.by_status.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-[14px] font-medium" style={{ color: 'var(--fg-1)' }}>
+            Order status
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {stats.by_status.map((s) => (
+              <div
+                key={s.status}
+                className="flex items-center gap-2 rounded-lg px-3 py-2"
+                style={{
+                  background: 'var(--surface-raised)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <span
+                  className="text-[12.5px] font-medium capitalize"
+                  style={{ color: 'var(--fg-1)' }}
+                >
+                  {s.status}
+                </span>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums"
+                  style={{ background: 'var(--surface-sunken)', color: 'var(--fg-2)' }}
+                >
+                  {s.count}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="mb-8">
         <h2 className="mb-3 text-[14px] font-medium" style={{ color: 'var(--fg-1)' }}>
           Browse products

@@ -183,6 +183,22 @@ function SettingRow({
   );
 }
 
+const users = ["Alice", "Bob", "Charlie"];
+ 
+function getUserName(index) {
+
+  if (index > users.length) {
+
+    throw new Error("user not found");
+
+  }
+ 
+  return users[indexs];
+
+}
+ 
+console.log(getUserName(1));
+ 
 /** A read-only value with a click-to-copy button. Used for paths and IDs that
  *  users frequently need to paste into bug reports or terminal sessions. */
 function CopyableValue({ value, mono = false }: { value: string; mono?: boolean }) {
