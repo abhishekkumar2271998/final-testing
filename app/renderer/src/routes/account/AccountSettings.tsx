@@ -6,8 +6,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme, type Theme } from '@/hooks/useTheme';
 import { navigate } from '@/lib/router';
 
-/** Card wrapper matching the surface treatment used across the account pages. */
-function Card({
+/** Card wrapper matching the surface treatment used across the account pages.
+ *  Named distinctly from the shared `ui/card` primitive, which uses a
+ *  different padding/shadow scale than the account screens. */
+function SettingsCard({
   title,
   children,
 }: {
@@ -69,8 +71,10 @@ const THEME_OPTIONS: { value: Theme; label: string; icon: typeof Sun }[] = [
   { value: 'system', label: 'System', icon: Monitor },
 ];
 
-/** Segmented light / dark / system picker. Radio semantics rather than three
- *  plain buttons so screen readers announce it as one grouped choice. */
+/** Segmented light / dark / system picker. Grouped toggle buttons rather than
+ *  a radiogroup — radio semantics would promise arrow-key navigation between
+ *  options, which plain buttons don't provide; each option stays tabbable and
+ *  announces its own pressed state instead. */
 function ThemePicker({
   theme,
   setTheme,
@@ -136,13 +140,13 @@ export function AccountSettings() {
       </p>
 
       <div className="max-w-[620px]">
-        <Card title="Appearance">
+        <SettingsCard title="Appearance">
           <SettingRow label="Theme" description={appearanceHint}>
             <ThemePicker theme={theme} setTheme={setTheme} />
           </SettingRow>
-        </Card>
+        </SettingsCard>
 
-        <Card title="Account">
+        <SettingsCard title="Account">
           <SettingRow label="Username" description={user?.username ?? '—'} />
           <SettingRow label="Email" description={user?.email ?? '—'} />
           <SettingRow
@@ -167,9 +171,9 @@ export function AccountSettings() {
               Edit profile
             </Button>
           </SettingRow>
-        </Card>
+        </SettingsCard>
 
-        <Card title="Session">
+        <SettingsCard title="Session">
           <SettingRow
             label="Sign out"
             description="Ends this session on this device."
@@ -187,7 +191,7 @@ export function AccountSettings() {
               Sign out
             </Button>
           </SettingRow>
-        </Card>
+        </SettingsCard>
       </div>
     </DashboardShell>
   );
