@@ -24,11 +24,10 @@ const THEME_LABEL: Record<Theme, string> = {
   system: 'System',
 };
 
-/** Light / dark / system switch for the dashboard header. The dashboard chrome
- *  has no Settings entry point, so this cycles all three states rather than
- *  toggling two — otherwise the system preference becomes unreachable here.
- *  Takes theme state as props: DashboardShell owns the single useTheme
- *  instance, since two instances keep independent React state. */
+/** Quick light / dark / system switch in the dashboard header, alongside the
+ *  full picker on /account/settings. Cycles all three states so the system
+ *  preference is reachable without a detour through Settings. Takes theme
+ *  state as props — DashboardShell owns the hook call for this tree. */
 function ThemeToggle({
   theme,
   setTheme,
@@ -91,6 +90,7 @@ export function DashboardShell({
     user.role === 'seller'
       ? { label: 'Seller', path: '/seller' }
       : { label: 'Buyer', path: '/buyer' },
+    { label: 'Settings', path: '/account/settings' },
   ];
 
   return (

@@ -16,6 +16,7 @@ import { SignUp } from '@/routes/account/SignUp';
 import { Profile } from '@/routes/account/Profile';
 import { SellerDashboard } from '@/routes/account/SellerDashboard';
 import { BuyerDashboard } from '@/routes/account/BuyerDashboard';
+import { AccountSettings } from '@/routes/account/AccountSettings';
 import { AuthProvider } from '@/hooks/useAuth';
 import { AskBar, TranscriptBar } from '@/components/AskBar';
 import { BottomDockSlot } from '@/components/BottomDockSlot';
@@ -147,7 +148,14 @@ export function App() {
   );
 }
 
-const ACCOUNT_ROUTES = ['/signin', '/signup', '/profile', '/seller', '/buyer'];
+const ACCOUNT_ROUTES = [
+  '/signin',
+  '/signup',
+  '/profile',
+  '/seller',
+  '/buyer',
+  '/account/settings',
+];
 
 function isAccountRoute(route: string): boolean {
   return ACCOUNT_ROUTES.includes(route);
@@ -158,6 +166,7 @@ function AccountRouteView({ route }: { route: string }) {
   if (route === '/profile') return <Profile />;
   if (route === '/seller') return <SellerDashboard />;
   if (route === '/buyer') return <BuyerDashboard />;
+  if (route === '/account/settings') return <AccountSettings />;
   return <SignIn />;
 }
 
