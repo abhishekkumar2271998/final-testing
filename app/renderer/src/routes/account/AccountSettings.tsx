@@ -84,7 +84,7 @@ function ThemePicker({
 }) {
   return (
     <div
-      role="radiogroup"
+      role="group"
       aria-label="Appearance"
       className="inline-flex gap-0.5 rounded-lg p-0.5"
       style={{ background: 'var(--surface-sunken)' }}
@@ -95,8 +95,7 @@ function ThemePicker({
           <button
             key={value}
             type="button"
-            role="radio"
-            aria-checked={selected}
+            aria-pressed={selected}
             onClick={() => setTheme(value)}
             className="inline-flex items-center gap-1.5 rounded-[6px] px-2.5 py-1.5 text-[12.5px] font-medium transition-colors"
             style={{
