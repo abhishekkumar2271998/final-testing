@@ -1,12 +1,57 @@
 import * as React from 'react';
-import { LogOut } from 'lucide-react';
+import { LogOut, Monitor, Moon, Sun } from 'lucide-react';
 import { AppIcon } from '@/components/ui/app-icon';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme, type Theme } from '@/hooks/useTheme';
 import { navigate } from '@/lib/router';
 
 interface NavItem {
   label: string;
   path: string;
+}
+
+const THEME_CYCLE: Theme[] = ['light', 'dark', 'system'];
+
+const THEME_ICON: Record<Theme, typeof Sun> = {
+  light: Sun,
+  dark: Moon,
+  system: Monitor,
+};
+
+const THEME_LABEL: Record<Theme, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'System',
+};
+
+/** Light / dark / system switch for the dashboard header. The dashboard chrome
+ *  has no Settings entry point, so this cycles all three states rather than
+ *  toggling two — otherwise the system preference becomes unreachable here.
+ *  Takes theme state as props: DashboardShell owns the single useTheme
+ *  instance, since two instances keep independent React state. */
+function ThemeToggle({
+  theme,
+  setTheme,
+}: {
+  theme: Theme;
+  setTheme: (next: Theme) => void;
+}) {
+  const next = THEME_CYCLE[(THEME_CYCLE.indexOf(theme) + 1) % THEME_CYCLE.length];
+  const Icon = THEME_ICON[theme];
+  const label = `Theme: ${THEME_LABEL[theme]} — switch to ${THEME_LABEL[next].toLowerCase()}`;
+
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(next)}
+      aria-label={label}
+      title={label}
+      className="inline-flex size-7 items-center justify-center rounded-md transition-colors hover:bg-[color:var(--surface-hover)] hover:text-[color:var(--fg-1)]"
+      style={{ color: 'var(--fg-2)' }}
+    >
+      <Icon className="size-4" />
+    </button>
+  );
 }
 
 /** Authenticated chrome for the profile / seller / buyer pages. Redirects to
@@ -19,6 +64,11 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   const { user, loading, signOut } = useAuth();
+  // Account routes render outside the main app shell, so MainToolbar — the
+  // only other mount point for useTheme — never runs here. Mounting the hook
+  // above the loading branch is what applies the stored light/dark preference
+  // to <html> on these routes at all, toggle or no toggle.
+  const { theme, setTheme } = useTheme();
 
   React.useEffect(() => {
     if (!loading && !user) navigate('/signin');
@@ -90,6 +140,7 @@ export function DashboardShell({
               {user.role}
             </span>
           </span>
+          <ThemeToggle theme={theme} setTheme={setTheme} />
           <button
             type="button"
             onClick={() => {
