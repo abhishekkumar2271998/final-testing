@@ -121,9 +121,11 @@ function LiveBadge() {
         color: '#FFFFFF',
       }}
     >
-      <span
+      <Circle
         aria-hidden
-        className="inline-block size-1.5 rounded-full bg-white"
+        size="sm"
+        variant="none"
+        className="bg-white"
         style={{ animation: 'pulse 1.4s ease-in-out infinite' }}
       />
       Recording

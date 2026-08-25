@@ -115,12 +115,10 @@ export function UpcomingCard({ event }: UpcomingCardProps) {
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              <span
-                className="size-[7px] rounded-full"
-                style={{
-                  background: 'var(--recording)',
-                  animation: 'record-pulse 1.6s ease-out infinite',
-                }}
+              <Circle
+                size={7}
+                variant="recording"
+                style={{ animation: 'record-pulse 1.6s ease-out infinite' }}
               />
               Start now
             </button>
