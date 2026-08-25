@@ -1,20 +1,21 @@
-# stenoai reviewer notes
+# StenoAI reviewer notes
 
 ## Architecture
-The `stenoai` repository consists of a macOS desktop application built using Electron for the front-end and a Python backend handling audio processing and data models. The project structure is divided into two main directories: `app` for the Electron application and `src` for the Python backend which includes modules for audio recording and transcription. Additionally, there is a `server` directory for the backend REST API, which supports user authentication and product management.
+The StenoAI codebase is structured into two main components: a Python backend located in the `src/` directory, handling audio recording, transcription, and summarization, and an Electron application in the `app/` directory for the desktop interface built with React and Vite. The backend exposes command-line functionality via `simple_recorder.py`, while the frontend handles user interactions and displays results.
 
 ## Conventions
-- **Python Coding Style**: Adheres to PEP 8 guidelines with type hints and docstrings mandated. The `requirements.txt` specifies dependencies, with versioning to ensure compatibility, e.g., `numpy>=1.24.0,<2.0`.
-- **JavaScript Coding Style**: Uses semicolons consistently and prefers `const/let` over `var`. The `app` directory contains the `package.json`, which includes predefined scripts for starting and building the application and running linters and tests.
-- **File Structure**: Follows a logical organization, with directories clearly delineating app components such as `app` for frontend, `src` for backend logic, and `server` for the REST API. For example, `src/audio_recorder.py` handles audio input, whereas `server/README.md` provides setup instructions for the API.
-- **Tailwind CSS Setup**: The styles for the application UI are managed using Tailwind CSS, emphasizing utility-first CSS and configuration in `tailwind.config.cjs` within the `renderer` subdirectory of `app`.
+- **Python Code Style**: Adhere to PEP 8 guidelines, using type hints and docstrings throughout. For instance, the functions in `src/audio_recorder.py` use type hints for parameters and return types. 
+- **JavaScript Formatting**: Always use semicolons and prefer `const`/`let` over `var` in all JS files like `app/main.js`.
+- **File Structure**: The project contains a clear separation of concerns where the `src/` directory contains backend code and the `app/` directory encompasses the frontend. Additionally, `mic-monitor/` contains a Makefile for building a macOS helper utility, indicating a structured approach to platform-specific needs.
+- **Version Control**: Follow a standard branching strategy where a feature branch is created for all new developments (`git checkout -b feature/your-feature-name`), as outlined in `CONTRIBUTING.md`.
 
 ## Intentional non-standard choices
-- **Manual Semantic Versioning**: Versioning is handled manually within the `package.json` using scripts for patch, minor, and major versions rather than automated tooling. This allows greater control but may introduce risks of oversight during releases.
-- **No Default Protocol for Windows**: The application is currently built exclusively for macOS with a mention of future Windows support, and operations dependent on macOS-specific features are gated accordingly.
+- **Local .env Variable Loader**: The application loads environment variables without using a dependency like `dotenv`. Instead, it reads a `.env` file in `app/main.js` directly, which is a simplification to avoid extra library overhead while still achieving similar results.
+- **Manual Semantic Versioning**: Instead of using automated versioning tools, the repository opts for manual semantic versioning managed through scripts in `app/package.json`, which could be seen as a deviation from common practice but allows for more tailored version management specific to release contexts.
 
 ## Watch out for
-- **Ignoring ESLint/Prettier Errors**: Ensure all JavaScript/TypeScript files adhere to the rules set in ESLint and Prettier configurations, as non-compliance might lead to inconsistent code styling.
-- **Backend API Endpoint Expectations**: The renderer expects the API hosted at `http://127.0.0.1:8000/api`, so any changes in the server configuration may cause failures in the application if they don't align with this path.
-- **Dotenv Loading**: Verify that environment variables are correctly loaded as per the `loadDotEnv` function in `app/main.js`, especially in production builds, to avoid issues with missing credentials.
-- **Resource Cleanup**: Ensure resources opened during application usage (such as microphone streams) are properly managed and closed to prevent resource leaks, particularly in event-driven contexts like Electron apps.
+- **Designate API Base URL**: Ensure the `VITE_API_BASE_URL` is set correctly when building the Electron app to avoid runtime errors when expecting the backend API at `http://127.0.0.1:8000/api`.
+- **Sourcemaps in Production**: Sourcemaps are included in development but excluded in production builds within `app/vite.config.ts` to prevent exposing source code, so ensure this convention is followed strictly to maintain security.
+- **Backend Status Checking**: Be aware that calls to check backend recording status should handle multiple retry attempts as per `app/main.js`. Incorrect handling may lead to missing notifications for shortcut actions.
+
+Carefully adhere to these notes during code review to maintain code quality and ensure usability across platforms and environments.
