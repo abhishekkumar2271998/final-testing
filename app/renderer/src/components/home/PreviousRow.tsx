@@ -1,5 +1,6 @@
 import { Folder as FolderIcon, Loader2 } from 'lucide-react';
 import type { Meeting } from '@/lib/ipc';
+import { Circle } from '@/components/ui/circle';
 import { navigate } from '@/lib/router';
 import { useMeetingsList } from '@/lib/meetingsListContext';
 
@@ -121,9 +122,11 @@ function LiveBadge() {
         color: '#FFFFFF',
       }}
     >
-      <span
+      <Circle
         aria-hidden
-        className="inline-block size-1.5 rounded-full bg-white"
+        size="sm"
+        variant="none"
+        className="bg-white"
         style={{ animation: 'pulse 1.4s ease-in-out infinite' }}
       />
       Recording

@@ -3,6 +3,7 @@ import { Video } from 'lucide-react';
 import type { CalendarEvent } from '@/lib/ipc';
 import { ipc } from '@/lib/ipc';
 import { cn } from '@/lib/utils';
+import { Circle } from '@/components/ui/circle';
 import { useRecording } from '@/hooks/useRecording';
 
 interface UpcomingCardProps {
@@ -115,12 +116,10 @@ export function UpcomingCard({ event }: UpcomingCardProps) {
                 fontFamily: 'var(--font-sans)',
               }}
             >
-              <span
-                className="size-[7px] rounded-full"
-                style={{
-                  background: 'var(--recording)',
-                  animation: 'record-pulse 1.6s ease-out infinite',
-                }}
+              <Circle
+                size={7}
+                variant="recording"
+                style={{ animation: 'record-pulse 1.6s ease-out infinite' }}
               />
               Start now
             </button>
