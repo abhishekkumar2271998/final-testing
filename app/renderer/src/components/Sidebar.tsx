@@ -14,6 +14,7 @@ import {
 import { navigate, rememberNonSettingsRoute, toggleSettings } from '@/lib/router';
 import { cn, shortcut } from '@/lib/utils';
 import { LucideIcon, IconPicker } from '@/components/IconPicker';
+import { Circle } from '@/components/ui/circle';
 import { useUpdateFolderIcon } from '@/hooks/useFolders';
 import { useOrgLogout, useOrgSession } from '@/hooks/useOrg';
 
@@ -615,13 +616,9 @@ function ProfileChip({ email, name, orgId, onSignOut }: ProfileChipProps) {
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <span
-          aria-hidden
-          className="inline-flex size-[22px] items-center justify-center rounded-full text-[13px]"
-          style={{ background: 'var(--surface-raised)', color: 'var(--fg-1)' }}
-        >
+        <Circle aria-hidden size="md" className="text-[13px]">
           {avatarFor(email) || initial}
-        </span>
+        </Circle>
         <span
           className="max-w-[120px] truncate text-[12.5px]"
           style={{ color: 'var(--fg-1)' }}

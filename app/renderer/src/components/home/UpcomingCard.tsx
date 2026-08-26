@@ -3,6 +3,7 @@ import { Video } from 'lucide-react';
 import type { CalendarEvent } from '@/lib/ipc';
 import { ipc } from '@/lib/ipc';
 import { cn } from '@/lib/utils';
+import { Circle } from '@/components/ui/circle';
 import { useRecording } from '@/hooks/useRecording';
 
 interface UpcomingCardProps {

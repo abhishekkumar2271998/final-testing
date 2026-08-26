@@ -43,6 +43,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Circle } from '@/components/ui/circle';
 import {
   Tooltip,
   TooltipTrigger,
@@ -865,7 +866,7 @@ function StreamingView({ text, phase }: { text: string; phase: StreamPhase }) {
           if (block.type === 'bullet') {
             return (
               <div key={i} className={cn('flex gap-2', animate && 'animate-fade-in')}>
-                <span className="mt-[0.45em] size-1 flex-shrink-0 rounded-full bg-[color:var(--fg-2)]" />
+                <Circle size="xs" variant="ink" className="mt-[0.45em]" />
                 <p className="text-sm leading-[1.65]" style={{ color: 'var(--fg-1)' }}>{block.text}</p>
               </div>
             );
