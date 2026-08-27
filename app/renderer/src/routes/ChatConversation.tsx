@@ -14,6 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { IconButton } from '@/components/ui/icon-button';
 import { PRESETS, PresetGlyph } from '@/lib/chatPresets';
 import {
   useAllChatSessions,
@@ -401,25 +402,18 @@ export function ChatConversation({ sessionId }: ChatConversationProps) {
             </div>
             <div className="flex items-center gap-1">
               {isStreaming ? (
-                <button
-                  type="button"
-                  onClick={stop}
-                  className="inline-flex size-7 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)]"
-                  style={{ color: 'var(--fg-1)' }}
-                  aria-label="Stop"
-                >
+                <IconButton onClick={stop} size="sm" label="Stop">
                   <Square className="size-[12px]" fill="currentColor" />
-                </button>
+                </IconButton>
               ) : (
-                <button
+                <IconButton
                   type="submit"
                   disabled={!input.trim() || !ready}
-                  className="inline-flex size-7 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)] disabled:opacity-40"
-                  style={{ color: 'var(--fg-1)' }}
-                  aria-label="Send"
+                  size="sm"
+                  label="Send"
                 >
                   <ArrowUp className="size-[14px]" />
-                </button>
+                </IconButton>
               )}
             </div>
           </div>
