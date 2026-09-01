@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FormError } from '@/components/account/AuthLayout';
+import { BuyerAdBoard } from '@/components/account/BuyerAdBoard';
 import { api, apiErrorMessage } from '@/lib/api';
 import {
   formatPrice,
@@ -158,10 +159,11 @@ export function BuyerDashboardPanel({ title = 'Buyer dashboard' }: { title?: str
         </h1>
       )}
 
-      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Orders" value={stats?.order_count ?? '—'} />
         <StatCard label="Total spent" value={stats ? formatPrice(stats.total_spent) : '—'} />
         <StatCard label="Available" value={products.length} />
+        <StatCard label="Open ads" value={stats?.open_ad_count ?? '—'} />
       </div>
 
       <FormError message={error} />
@@ -187,6 +189,10 @@ export function BuyerDashboardPanel({ title = 'Buyer dashboard' }: { title?: str
           </div>
         )}
       </section>
+
+      <div className="mb-8">
+        <BuyerAdBoard onChange={() => void load()} />
+      </div>
 
       <section>
         <h2 className="mb-3 text-[14px] font-medium" style={{ color: 'var(--fg-1)' }}>
