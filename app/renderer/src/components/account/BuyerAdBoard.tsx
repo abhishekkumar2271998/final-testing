@@ -134,7 +134,7 @@ function AdCard({
 
 /** The buyer's ad board: post "wanted" ads and manage their lifecycle.
  *  Sellers see the open ones through the public /ads/ board. */
-export function BuyerAdBoard({ onChange }: { onChange?: () => void } = {}) {
+export function BuyerAdBoard({ onChange }: { onChange?: () => void }) {
   const [ads, setAds] = React.useState<BuyerAd[]>([]);
   const [filter, setFilter] = React.useState<Filter>('all');
   const [draft, setDraft] = React.useState<BuyerAdDraft>(EMPTY_DRAFT);
