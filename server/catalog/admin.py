@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, Product
+from .models import BuyerAd, Order, Product
 
 
 @admin.register(Product)
@@ -14,3 +14,10 @@ class ProductAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "buyer", "product", "quantity", "status", "created_at")
     list_filter = ("status",)
+
+
+@admin.register(BuyerAd)
+class BuyerAdAdmin(admin.ModelAdmin):
+    list_display = ("title", "buyer", "category", "budget_max", "status", "created_at")
+    list_filter = ("status", "category")
+    search_fields = ("title", "buyer__username")
