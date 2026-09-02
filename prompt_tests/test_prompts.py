@@ -11,6 +11,23 @@ Usage:
 """
 
 import click
+import json
+import ollama
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, Any
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+# Define your prompt templates here
+PROMPT_TEMPLATES = {
+    # Current prompt - matches _create_permissive_prompt in src/summarizer.py
+    "current": lambda transcript: f"""You are a helpful meeting assistant. Summarise this meeting transcript into participants, discussion areas, key points and any next steps mentioned. Only base your summary on what was explicitly discussed in the transcript.
+
+IMPORTANT: Do not infer or assume information that wasn't directly mentioned.
 
 Include a brief overview so someone can quickly understand what happened in the meeting, who were the participants, what areas/topics were discussed, what were the key points, and what are the next steps if any were mentioned.
 
