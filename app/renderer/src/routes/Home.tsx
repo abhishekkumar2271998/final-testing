@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ArrowRight,
   Calendar,
   ExternalLink,
   FileText,
@@ -9,6 +10,7 @@ import {
   PencilLine,
   RefreshCw,
   Search,
+  ShoppingBag,
   Sparkles,
   Square,
   X,
