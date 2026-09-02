@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ArrowRight,
   Calendar,
   ExternalLink,
   FileText,
@@ -9,6 +10,7 @@ import {
   PencilLine,
   RefreshCw,
   Search,
+  ShoppingBag,
   Sparkles,
   Square,
   X,
@@ -138,6 +140,15 @@ export function Home({ mode }: HomeProps) {
               <KbdKey>R</KbdKey>
               <span>from anywhere</span>
             </p>
+            <button
+              type="button"
+              onClick={() => navigate('/buyer')}
+              className="inline-flex items-center gap-1.5 rounded text-xs underline-offset-4 hover:underline"
+              style={{ color: 'var(--fg-2)' }}
+            >
+              <ShoppingBag className="size-3.5" />
+              Open the buyer dashboard
+            </button>
           </div>
         </div>
       ) : (
@@ -174,6 +185,8 @@ export function Home({ mode }: HomeProps) {
           {mode === 'home' && <CardGallery />}
 
           {mode === 'home' && <ProductGrid />}
+
+          {mode === 'home' && <MarketplaceSection />}
 
           {mode === 'home' && <ContactSection />}
 
@@ -654,6 +667,69 @@ function ProductGrid() {
               </Button>
             </div>
           </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface MarketplaceLink {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+  path: string;
+}
+
+const MARKETPLACE_LINKS: MarketplaceLink[] = [
+  {
+    icon: ShoppingBag,
+    title: 'Buyer dashboard',
+    body: 'Browse products, track your orders, and post ads to the board.',
+    path: '/buyer',
+  },
+];
+
+// Entry points into the marketplace account area. These are internal hash
+// routes, so they navigate in-app rather than opening the OS handler; the
+// account routes redirect to /signin when there's no session.
+function MarketplaceSection() {
+  return (
+    <section className="mb-10">
+      <SectionHead title="Marketplace" count={MARKETPLACE_LINKS.length} />
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {MARKETPLACE_LINKS.map(({ icon: Icon, title, body, path }) => (
+          <button
+            key={path}
+            type="button"
+            onClick={() => navigate(path)}
+            className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-colors hover:bg-[color:var(--surface-hover)]"
+            style={{
+              background: 'var(--surface-raised)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            <span
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: 'rgba(27,27,25,0.05)', color: 'var(--fg-1)' }}
+            >
+              <Icon className="size-4" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div
+                className="text-sm font-medium tracking-[-0.005em]"
+                style={{ color: 'var(--fg-1)', fontFamily: 'var(--font-sans)' }}
+              >
+                {title}
+              </div>
+              <div
+                className="mt-0.5 text-[12.5px] leading-[1.5]"
+                style={{ color: 'var(--fg-2)' }}
+              >
+                {body}
+              </div>
+            </div>
+            <ArrowRight className="size-4 shrink-0" style={{ color: 'var(--fg-muted)' }} />
+          </button>
         ))}
       </div>
     </section>

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ArrowDownToLine, X } from 'lucide-react';
+import { IconButton } from '@/components/ui/icon-button';
 import { ipc } from '@/lib/ipc';
 
 /**
@@ -53,15 +54,15 @@ export function UpdateToast() {
       >
         Restart
       </button>
-      <button
-        type="button"
+      <IconButton
         onClick={() => setDismissed(true)}
-        aria-label="Dismiss update notification"
-        className="ml-0.5 inline-flex cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-1"
-        style={{ color: 'var(--fg-2)' }}
+        label="Dismiss update notification"
+        variant="subtle"
+        size="xs"
+        className="ml-0.5"
       >
         <X size={12} />
-      </button>
+      </IconButton>
     </div>
   );
 }
