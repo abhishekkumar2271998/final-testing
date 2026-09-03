@@ -5,6 +5,7 @@ import {
   ExternalLink,
   FileText,
   FolderOpen,
+  LogIn,
   Mail,
   Mic,
   PencilLine,
@@ -13,6 +14,8 @@ import {
   ShoppingBag,
   Sparkles,
   Square,
+  Store,
+  UserRound,
   X,
 } from 'lucide-react';
 import { MeetingsShell } from '@/components/MeetingsShell';
@@ -686,6 +689,24 @@ const MARKETPLACE_LINKS: MarketplaceLink[] = [
     title: 'Buyer dashboard',
     body: 'Browse products, track your orders, and post ads to the board.',
     path: '/buyer',
+  },
+  {
+    icon: Store,
+    title: 'Seller dashboard',
+    body: 'List products, watch stock levels, and follow incoming orders.',
+    path: '/seller',
+  },
+  {
+    icon: UserRound,
+    title: 'Profile',
+    body: 'Your display name, bio, and contact details.',
+    path: '/profile',
+  },
+  {
+    icon: LogIn,
+    title: 'Sign in',
+    body: 'Sign in or create a buyer or seller account.',
+    path: '/signin',
   },
 ];
 
