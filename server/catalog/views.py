@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 
 from accounts.permissions import IsBuyer, IsSeller
 
-from .models import Order, Product
-from .serializers import OrderSerializer, ProductSerializer
+from .models import BuyerAd, Order, Product
+from .serializers import BuyerAdSerializer, OrderSerializer, ProductSerializer
 
 
 # ---------------------------------------------------------------------------
@@ -24,6 +24,22 @@ class ProductDetailView(generics.RetrieveAPIView):
 
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
+
+
+class AdBoardView(generics.ListAPIView):
+    """GET /api/ads/ — the public ad board: open buyer ads, any authed user.
+
+    Optional `?category=` filter so sellers can narrow to their own niche.
+    """
+
+    serializer_class = BuyerAdSerializer
+
+    def get_queryset(self):
+        qs = BuyerAd.objects.filter(status=BuyerAd.Status.OPEN)
+        category = self.request.query_params.get("category", "").strip()
+        if category:
+            qs = qs.filter(category__iexact=category)
+        return qs
 
 
 # ---------------------------------------------------------------------------
@@ -90,6 +106,29 @@ class BuyerOrderListCreateView(generics.ListCreateAPIView):
         serializer.save(buyer=self.request.user)
 
 
+class BuyerAdListCreateView(generics.ListCreateAPIView):
+    """GET/POST /api/buyer/ads/ — the buyer's own ads."""
+
+    serializer_class = BuyerAdSerializer
+    permission_classes = [IsBuyer]
+
+    def get_queryset(self):
+        return BuyerAd.objects.filter(buyer=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(buyer=self.request.user)
+
+
+class BuyerAdDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET/PUT/PATCH/DELETE /api/buyer/ads/<id>/ — owned ads only."""
+
+    serializer_class = BuyerAdSerializer
+    permission_classes = [IsBuyer]
+
+    def get_queryset(self):
+        return BuyerAd.objects.filter(buyer=self.request.user)
+
+
 class BuyerDashboardView(APIView):
     """GET /api/buyer/dashboard/ — headline stats for the buyer."""
 
@@ -103,6 +142,9 @@ class BuyerDashboardView(APIView):
             {
                 "order_count": orders.count(),
                 "total_spent": str(spent),
+                "open_ad_count": BuyerAd.objects.filter(
+                    buyer=request.user, status=BuyerAd.Status.OPEN
+                ).count(),
                 "by_status": list(by_status),
                 "recent_orders": OrderSerializer(orders[:5], many=True).data,
             }

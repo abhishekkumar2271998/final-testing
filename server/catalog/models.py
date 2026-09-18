@@ -59,3 +59,43 @@ class Order(models.Model):
 
     def __str__(self) -> str:
         return f"Order#{self.pk} {self.product} x{self.quantity}"
+
+
+class BuyerAd(models.Model):
+    """A "wanted" ad posted by a buyer: something they're looking to buy.
+
+    Sellers browse the open ads to see demand; the buyer closes an ad once
+    it's been fulfilled (or they've lost interest).
+    """
+
+    class Status(models.TextChoices):
+        OPEN = "open", "Open"
+        FULFILLED = "fulfilled", "Fulfilled"
+        CLOSED = "closed", "Closed"
+
+    buyer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="ads",
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    category = models.CharField(max_length=60, blank=True)
+    budget_max = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.OPEN
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    @property
+    def is_open(self) -> bool:
+        return self.status == self.Status.OPEN
+
+    def __str__(self) -> str:
+        return self.title

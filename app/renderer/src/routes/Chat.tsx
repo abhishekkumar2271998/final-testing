@@ -11,6 +11,7 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from '@/components/ui/popover';
+import { IconButton } from '@/components/ui/icon-button';
 import { MeetingsShell } from '@/components/MeetingsShell';
 import {
   useAllChatSessions,
@@ -234,15 +235,14 @@ export function Chat() {
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <button
+              <IconButton
                 type="submit"
                 disabled={!input.trim() || !ready}
-                className="inline-flex size-7 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--surface-hover)] disabled:opacity-40"
-                style={{ color: 'var(--fg-1)' }}
-                aria-label="Send"
+                size="sm"
+                label="Send"
               >
                 <ArrowUp className="size-[14px]" />
-              </button>
+              </IconButton>
             </div>
           </div>
         </form>

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Order, Product
+from .models import BuyerAd, Order, Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -72,3 +72,40 @@ class OrderSerializer(serializers.ModelSerializer):
         product.stock -= order.quantity
         product.save(update_fields=["stock"])
         return order
+
+
+class BuyerAdSerializer(serializers.ModelSerializer):
+    buyer_name = serializers.CharField(source="buyer.username", read_only=True)
+
+    class Meta:
+        model = BuyerAd
+        fields = [
+            "id",
+            "buyer",
+            "buyer_name",
+            "title",
+            "description",
+            "category",
+            "budget_max",
+            "status",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "id",
+            "buyer",
+            "buyer_name",
+            "created_at",
+            "updated_at",
+        ]
+
+    def validate_title(self, value):
+        title = value.strip()
+        if not title:
+            raise serializers.ValidationError("Give the ad a title.")
+        return title
+
+    def validate_budget_max(self, value):
+        if value is not None and value <= 0:
+            raise serializers.ValidationError("Budget must be greater than zero.")
+        return value

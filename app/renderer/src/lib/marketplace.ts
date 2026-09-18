@@ -37,8 +37,32 @@ export interface SellerStats {
 export interface BuyerStats {
   order_count: number;
   total_spent: string;
+  open_ad_count: number;
   by_status: { status: string; count: number }[];
   recent_orders: Order[];
+}
+
+export type BuyerAdStatus = 'open' | 'fulfilled' | 'closed';
+
+/** A "wanted" ad posted by a buyer — something they're looking to buy. */
+export interface BuyerAd {
+  id: number;
+  buyer: number;
+  buyer_name: string;
+  title: string;
+  description: string;
+  category: string;
+  budget_max: string | null;
+  status: BuyerAdStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BuyerAdDraft {
+  title: string;
+  description?: string;
+  category?: string;
+  budget_max?: string | null;
 }
 
 export function formatPrice(value: string | number): string {

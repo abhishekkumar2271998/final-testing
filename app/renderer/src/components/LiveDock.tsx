@@ -1,5 +1,6 @@
 import { Pause, Play, Square } from 'lucide-react';
 import { AudioWave } from '@/components/AudioWave';
+import { IconButton } from '@/components/ui/icon-button';
 import { useRecording } from '@/hooks/useRecording';
 
 /**
@@ -37,17 +38,14 @@ export function LiveDock() {
           stopped={stopped}
           elapsedSeconds={recording.elapsed}
         />
-        <button
-          type="button"
+        <IconButton
           onClick={onPauseToggle}
           disabled={stopped}
-          aria-label={paused ? 'Resume recording' : 'Pause recording'}
-          title={paused ? 'Resume recording' : 'Pause recording'}
-          className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full border-0 transition-colors hover:bg-[color:var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ background: 'transparent', color: 'var(--fg-1)' }}
+          label={paused ? 'Resume recording' : 'Pause recording'}
+          tooltip
         >
           {paused ? <Play size={14} /> : <Pause size={14} />}
-        </button>
+        </IconButton>
         <button
           type="button"
           onClick={onStop}
