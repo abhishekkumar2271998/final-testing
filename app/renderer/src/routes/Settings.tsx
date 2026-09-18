@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Circle } from '@/components/ui/circle';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -266,13 +267,14 @@ function ProfileCard({
         border: '1px solid var(--border-subtle)',
       }}
     >
-      <div
-        className="inline-flex size-12 shrink-0 items-center justify-center rounded-full text-[16px] font-medium"
-        style={{ background: 'var(--surface-sunken)', color: 'var(--fg-1)' }}
+      <Circle
+        size="xl"
+        variant="sunken"
+        className="text-[16px] font-medium"
         aria-hidden="true"
       >
         {trimmed ? nameInitials(trimmed) : '?'}
-      </div>
+      </Circle>
       <div className="min-w-0">
         <div
           className="truncate text-[15px] font-medium"

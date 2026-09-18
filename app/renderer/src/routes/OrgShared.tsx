@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ArrowLeft, Globe, Loader2, Lock, MoreHorizontal, Trash2, Users } from 'lucide-react';
 import { MeetingsShell } from '@/components/MeetingsShell';
 import { Button } from '@/components/ui/button';
+import { Circle } from '@/components/ui/circle';
 import {
   Popover,
   PopoverContent,
@@ -30,12 +31,9 @@ function NotSignedIn() {
   return (
     <MeetingsShell activeSummaryFile={null}>
       <div className="mx-auto flex max-w-[480px] flex-col items-center gap-4 py-16 text-center">
-        <div
-          className="flex size-12 items-center justify-center rounded-full"
-          style={{ background: 'var(--surface-raised)', color: 'var(--fg-2)' }}
-        >
+        <Circle size="xl" className="text-[color:var(--fg-2)]">
           <Users size={20} />
-        </div>
+        </Circle>
         <h1 className="text-[24px] font-normal" style={{ fontFamily: 'var(--font-serif)', color: 'var(--fg-1)' }}>
           Connect your organisation
         </h1>

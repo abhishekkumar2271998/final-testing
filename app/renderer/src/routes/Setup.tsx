@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Check, Cloud, HardDrive, Mic, MessageSquare, Zap, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Circle } from '@/components/ui/circle';
 import { Switch } from '@/components/ui/switch';
 import {
   Select,
@@ -71,9 +72,9 @@ function StepCard({ step }: { step: Step }) {
       data-setup-step={step.id}
       data-setup-status={step.status}
     >
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground">
+      <Circle size="lg" variant="muted">
         {step.status === 'done' ? <Check className="size-5" /> : step.status === 'failed' ? <X className="size-5" /> : <Icon className="size-5" />}
-      </div>
+      </Circle>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <div className="text-sm font-medium text-foreground">{step.title}</div>
